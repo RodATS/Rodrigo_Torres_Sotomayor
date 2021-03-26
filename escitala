@@ -1,1 +1,64 @@
+#include <iostream>
+#include <string>
+#include<vector>
+using namespace std;
 
+class AlgoritmX
+{
+private:
+    int f, c;
+    int clave[2];
+
+public:
+    AlgoritmX(int fila, int columna) {
+       clave[0]=fila; clave[1]=columna;
+    }
+    string cifrado(string texto)
+    {
+        string mensaje_cifrado;
+        if ((clave[0] * clave[1]) > texto.length())
+            for (int aux = 0; aux != (clave[0] * clave[1]) > texto.length(); aux++)
+            {
+                texto += " ";
+            }
+        for (int i=0,j = clave[1]; i < ((clave[0] * clave[1])/2);i++,j++)
+        {
+          mensaje_cifrado+=texto[i];
+          mensaje_cifrado+=texto[j];
+        }
+        return mensaje_cifrado;
+    }
+
+    string descifrado(string texto)
+    {
+      int i=0;
+      string mensaje_descifrado;
+      while(i<((clave[0] * clave[1])))
+      {
+        mensaje_descifrado+= texto[i];
+        i=i+2;
+      }
+      i=1;
+      while(i<(clave[0] * clave[1]))
+      {
+        mensaje_descifrado+= texto[i];
+        i=i+2;
+      }
+      return mensaje_descifrado;
+    }
+};
+
+int main()
+{
+    
+    string mensaje;
+    getline(cin, mensaje);
+    cout<<mensaje<<endl;
+    AlgoritmX Emisor(2,9);
+    string mensaje_c= Emisor.cifrado(mensaje);
+    cout<<(mensaje_c)<<endl;;
+    string mensaje_d= Emisor.descifrado(mensaje_c);
+    cout<<(mensaje_d)<<endl;;
+    
+    return 0;
+}

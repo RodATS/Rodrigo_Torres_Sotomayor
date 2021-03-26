@@ -6,7 +6,6 @@ using namespace std;
 class AlgoritmX
 {
 private:
-    int f, c;
     int clave[2];
 
 public:

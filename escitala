@@ -9,46 +9,51 @@ private:
     int clave[2];
 
 public:
-    AlgoritmX(int fila, int columna) {
-       clave[0]=fila; clave[1]=columna;
+    //constructor de la clase, filas y columnas
+    AlgoritmX(int filas, int columnas) {
+       clave[0]=filas; clave[1]=columnas;
     }
+
+    //funcion cifrado
     string cifrado(string texto)
     {
-        
-        if ((clave[0] * clave[1]) > texto.length())
-            for (int aux = 0; aux < (clave[0] * clave[1]) > texto.length(); aux++)
-            {
-                texto += " ";
-            }
+      //agregar espacios al string para completar las dimensiones dadas si fuera necesario
+      if ((clave[0] * clave[1]) > texto.length())
+      {
+        for (int aux = 0; aux < (clave[0] * clave[1]) > texto.length(); aux++)
+        {
+            texto += " ";
+        }
+      }
       string mensaje_cifrado;
-      int j=0;
-      while(j<clave[1])
+      int j=0;//la variable j para contabilizar columnas
+      while(j<clave[1])//j < al numero de columnas
       {   
-        int i=j; 
+        int i=j; //la variable i para contabilizar las filas
         while(i<(clave[0]*clave[1] ))
         {
           mensaje_cifrado+= texto[i];
-          i=i+clave[1];
+          i=i+clave[1];//se le suma el numero de columnas para asi llegar a la posicion de la siguiente letra
         }
-        j++;
+        j++;//se le suma 1 para avanzar columna por columna
       }
         return mensaje_cifrado;
     }
 
-
+  //funcion descifrado
     string descifrado(string texto)
     {
-      int j=0;
+      int j=0;//la variable j para contabilizar filas
       string mensaje_descifrado;
-      while(j<clave[0])
+      while(j<clave[0])//j < al numero de filas
       {   
-        int i=j; 
+        int i=j; //la variable i para contabilizar las columnas
         while(i<((clave[0] * clave[1])))
         {
           mensaje_descifrado+= texto[i];
-          i=i+clave[0];
+          i=i+clave[0];//se le suma la cantidad de filas para ubicarse en la posicion de la siguiente letra
         }
-        j++;
+        j++;//se le suma 1 para avanzar columna por columna
       }
       return mensaje_descifrado;
     }
@@ -59,6 +64,7 @@ int main()
     cout<<"ingrese mensaje: "<<endl;
     string mensaje;
     getline(cin, mensaje);
+    
     AlgoritmX Emisor(3,10);
     string mensaje_c= Emisor.cifrado(mensaje);
     cout<<(mensaje_c)<<endl;;

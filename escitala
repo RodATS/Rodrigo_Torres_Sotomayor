@@ -6,6 +6,7 @@ using namespace std;
 class AlgoritmX
 {
 private:
+    int f, c;
     int clave[2];
 
 public:
@@ -14,34 +15,41 @@ public:
     }
     string cifrado(string texto)
     {
-        string mensaje_cifrado;
+        
         if ((clave[0] * clave[1]) > texto.length())
-            for (int aux = 0; aux != (clave[0] * clave[1]) > texto.length(); aux++)
+            for (int aux = 0; aux < (clave[0] * clave[1]) > texto.length(); aux++)
             {
                 texto += " ";
             }
-        for (int i=0,j = clave[1]; i < ((clave[0] * clave[1])/2);i++,j++)
+      string mensaje_cifrado;
+      int j=0;
+      while(j<clave[1])
+      {   
+        int i=j; 
+        while(i<(clave[0]*clave[1] ))
         {
-          mensaje_cifrado+=texto[i];
-          mensaje_cifrado+=texto[j];
+          mensaje_cifrado+= texto[i];
+          i=i+clave[1];
         }
+        j++;
+      }
         return mensaje_cifrado;
     }
 
+
     string descifrado(string texto)
     {
-      int i=0;
+      int j=0;
       string mensaje_descifrado;
-      while(i<((clave[0] * clave[1])))
-      {
-        mensaje_descifrado+= texto[i];
-        i=i+2;
-      }
-      i=1;
-      while(i<(clave[0] * clave[1]))
-      {
-        mensaje_descifrado+= texto[i];
-        i=i+2;
+      while(j<clave[0])
+      {   
+        int i=j; 
+        while(i<((clave[0] * clave[1])))
+        {
+          mensaje_descifrado+= texto[i];
+          i=i+clave[0];
+        }
+        j++;
       }
       return mensaje_descifrado;
     }
@@ -49,15 +57,14 @@ public:
 
 int main()
 {
-    
+    cout<<"ingrese mensaje: "<<endl;
     string mensaje;
     getline(cin, mensaje);
-    cout<<mensaje<<endl;
-    AlgoritmX Emisor(2,9);
+    AlgoritmX Emisor(3,10);
     string mensaje_c= Emisor.cifrado(mensaje);
     cout<<(mensaje_c)<<endl;;
     string mensaje_d= Emisor.descifrado(mensaje_c);
     cout<<(mensaje_d)<<endl;;
-    
+
     return 0;
 }

@@ -1,0 +1,157 @@
+#include <iostream>
+#include <string>
+#include<vector>
+using namespace std;
+
+class AlgoritmX
+{
+private:
+    int clave[2];
+
+public:
+    AlgoritmX(int fila, int columna) {
+       clave[0]=fila; clave[1]=columna;
+    }
+//////////////////////////////////////////////////////
+    string cifrado(string texto)
+    {
+      string mensaje_cifrado;
+      int j=0;
+      int aux=2;
+      int desplazamiento=0;
+      while(j<clave[0]-1)
+      {
+        if(j==0)
+        {
+          while(desplazamiento<clave[1])
+          {
+            if(desplazamiento<clave[1])
+            {
+            mensaje_cifrado += texto[desplazamiento];
+            }
+            desplazamiento+=(clave[0]*2)-aux;
+          }
+        }
+        
+        else{
+          
+        desplazamiento=j;
+          while(desplazamiento<clave[1])
+          {
+            if(desplazamiento<clave[1])
+              {
+              mensaje_cifrado += texto[desplazamiento];
+             }
+            desplazamiento+=(clave[0]*2)-aux;
+            if(desplazamiento<clave[1])
+              {
+              mensaje_cifrado += texto[desplazamiento];
+              }
+            desplazamiento += (aux-2);
+          }
+        }
+        
+
+        aux=aux+2;
+        j++;
+      }
+      desplazamiento=j;
+      while(desplazamiento<clave[1])
+          {
+            if(desplazamiento<clave[1])
+            {
+            mensaje_cifrado += texto[desplazamiento];
+            }
+            desplazamiento += (aux-2);
+          }
+
+      return mensaje_cifrado;
+    }
+
+
+/////////////////////////////////////////////////////////////
+    string descifrado(string mensaje_c)
+    {
+      string mensaje_descifrado;
+      for(int indice=0; indice< mensaje_c.size(); indice++)
+      {
+        mensaje_descifrado+="-";
+      }
+      int indice=0;
+      int aux=2;
+      int pos=0;
+      int j=0;
+
+      while(j<clave[0]-1)
+      {
+        if(j==0)
+        {
+          while(indice<clave[1])
+          {
+            if(indice<clave[1])
+            {
+            mensaje_descifrado[indice]=mensaje_c[pos];//0-0, 8-1
+            pos++;
+            }
+            indice+=(clave[0]*2)-aux;//2
+            
+          }
+        }
+////////////
+        else{
+          indice=j;
+          while(indice<clave[1])
+          {
+            if (indice<clave[1])
+            {
+              mensaje_descifrado[indice]= mensaje_c[pos];//1-2,9-4
+              pos++;
+            }
+            indice+=(clave[0]*2)-aux;//4
+            if(indice<clave[1])
+            {
+              mensaje_descifrado[indice]= mensaje_c[pos];//7-3,
+              pos++;
+            }
+            indice += (aux-2);
+            
+          }
+        }
+        aux=aux+2;
+        j++;
+      }
+ ///////////////////     
+      indice=j;
+      while(indice<clave[1])
+          {
+            if(indice<clave[1])
+            {
+              mensaje_descifrado[indice]= mensaje_c[pos];
+              pos++;
+            }
+            indice += (aux-2);
+            
+          }
+      return mensaje_descifrado;
+      
+    }
+    
+};
+
+
+////////////////////////////////////////////////////////////
+int main()
+{
+    
+    string mensaje;
+    cout<<"Mensaje: ";
+    getline(cin, mensaje);
+    AlgoritmX Emisor(5,mensaje.length());
+    string mensaje_c= Emisor.cifrado(mensaje);
+    cout<<"Mensaje cifrado: "<<(mensaje_c)<<endl;;
+   
+    string mensaje_d= Emisor.descifrado(mensaje_c);
+    cout<<"Mensaje descifrado: "<<(mensaje_d)<<endl;;
+
+    return 0;
+} 

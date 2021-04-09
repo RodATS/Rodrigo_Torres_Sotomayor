@@ -20,7 +20,7 @@ public:
       //agregar espacios al string para completar las dimensiones dadas si fuera necesario
       if ((clave[0] * clave[1]) > texto.length())
       {
-        for (int aux = 0; aux < (clave[0] * clave[1]) > texto.length(); aux++)
+        for (int aux = 0; aux <= (clave[0] * clave[1]); aux++)
         {
             texto += " ";
         }
@@ -32,6 +32,7 @@ public:
         int i=j; //la variable i para contabilizar las filas
         while(i<(clave[0]*clave[1] ))
         {
+          if(i<(clave[0]*clave[1] ))
           mensaje_cifrado+= texto[i];
           i=i+clave[1];//se le suma el numero de columnas para asi llegar a la posicion de la siguiente letra
         }
@@ -50,6 +51,7 @@ public:
         int i=j; //la variable i para contabilizar las columnas
         while(i<((clave[0] * clave[1])))
         {
+          if(i<(clave[0]*clave[1] ))
           mensaje_descifrado+= texto[i];
           i=i+clave[0];//se le suma la cantidad de filas para ubicarse en la posicion de la siguiente letra
         }

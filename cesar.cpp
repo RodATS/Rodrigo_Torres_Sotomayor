@@ -36,17 +36,23 @@ class Cesar{
         if(alfabeto.find(mensaje[aux])<alfabeto.length())
         {
         indice= alfabeto.find(mensaje[aux]);
-        if ((indice + clave)>alfabeto.length())
-        {
-          int aux=funcion_modulo((indice+clave),alfabeto.length());
-          if(aux==0)
-            mensaje_cifrado+= alfabeto[indice];//cuando la clave sea 26-longitud del alfabeto
+        if(clave<=alfabeto.length()){
+          if ((indice + clave)>=alfabeto.length())
+          {
+            int aux=funcion_modulo((indice+clave),alfabeto.length());
+              mensaje_cifrado+= alfabeto[aux];
+          }
           else
-            mensaje_cifrado+= alfabeto[aux];
+            mensaje_cifrado+= alfabeto[indice+clave];
+          }
+        
+        else{
+          if(indice+clave>alfabeto.length()*2)
+          mensaje_cifrado+= alfabeto[(clave-indice)-(alfabeto.length()-indice)];
+
+          else mensaje_cifrado+= alfabeto[(indice+clave)-alfabeto.length()];
         }
-        else
-          mensaje_cifrado+= alfabeto[indice+clave];
-        }
+      }
         aux++;
       }
         return mensaje_cifrado;
@@ -61,13 +67,10 @@ class Cesar{
       {
       if(alfabeto.find(mensaje[aux])<alfabeto.length())
         {
-        indice= alfabeto.find(mensaje[aux]);
-        if ((indice - clave)<0)
-        {
-          mensaje_descifrado+= alfabeto[alfabeto.length()-(clave-indice)];
-        }
-        else
-          mensaje_descifrado+= alfabeto[indice-clave];
+        indice= alfabeto.find(mensaje[aux]);    
+          int pos=funcion_modulo((indice+(alfabeto.length()-clave)),alfabeto.length());
+          mensaje_descifrado+= alfabeto[pos];
+          
         }
         aux++;
       }
@@ -76,10 +79,10 @@ class Cesar{
 };
 
 int main() {
-
+  cout<<"ingresa el mensaje:"<<endl;
   string message;
   getline(cin, message );
-  Cesar Em(26); //max num 26 clave
+  Cesar Em(5);
   string mensaje_c= Em.cifrado_cesar(message);
   cout<<mensaje_c<<endl;
   string mensaje_d= Em.descifrado_cesar(mensaje_c);

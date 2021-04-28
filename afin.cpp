@@ -10,8 +10,7 @@ class Afin{
   private:
   string alfabeto="abcdefghijklmnopqrstuvwxyz";
   int clave_a;
-  int b=rand()%51;
-  int clave_b=funcion_modulo(b, alfabeto.length());
+  int clave_b=rand()%26;
 
   public:
     Afin(){}

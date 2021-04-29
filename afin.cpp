@@ -21,12 +21,12 @@ class Afin{
       {aux=euclides(rand()%30,alfabeto.length());}
     clave_a=aux;
   }
-    int obtener_claves_a(){
-      return clave_a;
-    }
-    int obtener_claves_b(){
-      return clave_b;
-    }
+  int obtener_claves_a(){
+    return clave_a;
+  }
+  int obtener_claves_b(){
+    return clave_b;
+  }
 //////////////////////////////////////////////
       int funcion_modulo(int a, int n)
       {
@@ -98,9 +98,18 @@ class Afin{
     for(int i=0;i<mensaje.length();i++){
       if(alfabeto.find(mensaje[i])<alfabeto.length()){
         int indice = alfabeto.find(mensaje[i]);
-        int aux= (clave_a*indice)+clave_b;
-        int nueva_pos= funcion_modulo(aux, alfabeto.length());
-        mensaje_cifrado+= alfabeto[nueva_pos];
+        if(clave_a*indice>alfabeto.length()){
+          int reduccion= funcion_modulo(clave_a*indice, alfabeto.length());
+          int aux= reduccion+clave_b;
+          int nueva_pos= funcion_modulo(aux, alfabeto.length());
+          mensaje_cifrado+= alfabeto[nueva_pos];
+          }
+        else{
+          int aux= (clave_a*indice)+clave_b;
+          int nueva_pos= funcion_modulo(aux, alfabeto.length());
+          mensaje_cifrado+= alfabeto[nueva_pos];
+          }
+        
       }
     }
     return mensaje_cifrado;

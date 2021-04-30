@@ -14,7 +14,7 @@ class Afin{
 
   public:
     Afin(){}
-//////////////////////////////
+////////////////////////////// generamos y devolvemos las claves para que así el receptor pueda descifrar
   void generar_clave_a(){
     int aux=euclides(rand()%30,alfabeto.length());
     while(aux!=1)
@@ -98,7 +98,7 @@ class Afin{
     for(int i=0;i<mensaje.length();i++){
       if(alfabeto.find(mensaje[i])<alfabeto.length()){
         int indice = alfabeto.find(mensaje[i]);
-        if(clave_a*indice>alfabeto.length()){
+        if(clave_a*indice>alfabeto.length()){//en caso de que al multiplicar sea mayor que la longitud del alfabeto, se aplica el módulo
           int reduccion= funcion_modulo(clave_a*indice, alfabeto.length());
           int aux= reduccion+clave_b;
           int nueva_pos= funcion_modulo(aux, alfabeto.length());
@@ -132,8 +132,8 @@ class Afin{
 
 
 int main() {
-  Afin emisor;
-  Afin receptor;
+  Afin emisor;//objeto 1
+  Afin receptor;//objeto 2
   
   string mensaje;
   cout<<"Ingrese su mensaje: ";

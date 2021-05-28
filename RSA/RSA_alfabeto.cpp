@@ -1,30 +1,37 @@
- #include <iostream>
-#include <stdlib.h>     /* srand, rand */
+#include <iostream>
+#include <stdlib.h>    
 #include <time.h> 
 #include <math.h>
 using namespace std;
 
 class RSA{
   private:
-  string alfabeto="abcdefghijklmnopqrstuvwxyz";
   int p=17;
   int q=13;
   int d=0;
+  string alfabeto="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
   public:
   int N=0;
   int phi_N=0;
   int e=0;
+  int limite_mayor=50;
+  int limite_menor=5;
 
 //constructor
   RSA(){}
-
+  
+  void limites(int bits){
+    int aux = pow(2,bits);
+    limite_mayor=aux-1;
+    limite_menor=aux/2;
+  }
 //generar las claves p y q 
   void clave_p(){
     int a=0;
     int si_es=0;
     srand (time(NULL));
-    while(si_es==0){
-      a= rand() % (50 + 1);
+    while(si_es==0||a<=1){
+      a= limite_menor+rand() % (limite_mayor + 1);
       for(int aux=2;aux<10;aux++)
       {
         si_es=(a%aux);
@@ -41,8 +48,8 @@ class RSA{
     int b=0;
     int si_es=0;
     srand (time(NULL));
-    while(si_es==0 || q==p){
-      b= rand() % (55 + 1);
+    while(si_es==0 || b==p||b<=1){
+      b= limite_menor + rand() % (limite_mayor + 1);
       for(int aux=2;aux<10;aux++)
       {
         si_es=(b%aux);
@@ -109,7 +116,6 @@ int euclides(int a,int b)
       resultado=euclides(aux, phi_N);
       e=aux;
     }
-    cout<<endl;
     
   }
 
@@ -146,7 +152,7 @@ int euclides(int a,int b)
     int resultado_mod=numero;
     int elevado_cuadrado=numero;
     int aux=1;
-    while(aux<numero){
+    while(aux<exponente){
       if (aux>1){
         int potencia=pow(elevado_cuadrado,2);
         elevado_cuadrado=funcion_modulo(potencia, N);
@@ -161,17 +167,35 @@ int euclides(int a,int b)
     }
     return resultado_mod;
   }
+//////////////////////////////////////////////////////////
+  string digitos(string mensaje){
+    string conjunto_digitos;
+
+    int numero = alfabeto.length();
+    string letra_importante = to_string(numero);
+    int longitud_digito= letra_importante.length();
+
+    for(int indice=0;indice<mensaje.length();indice++){
+      int aux = alfabeto.find(mensaje[indice]);
+      string indice_letra= to_string(aux);
+
+      while (indice_letra.length()<longitud_digito){
+        indice_letra = to_string(0)+indice_letra;
+      }
+      conjunto_digitos += indice_letra;
+    }
+    conjunto_digitos += letra_importante;
+    return conjunto_digitos;
+  }
+
+///////////////////////////////////////////
 
 
-
-
-  string cifrado( string letra){
-    int codigo_cifrado=0;
-    string mensaje_cifrado;
-    int ubicacion = alfabeto.find(letra);
-    cout<<"ubicacion: "<<ubicacion<<endl;
+  string cifrado( string mensaje){
+    string conjunto_indices= digitos(mensaje);
     
-   clave_p();
+    
+    clave_p();
     cout<<"clave p: "<<p<<endl;
     clave_q();
     cout<<"clave q: "<<q<<endl;
@@ -179,50 +203,102 @@ int euclides(int a,int b)
     cout<<"N: "<<N<<endl;
     cout<<"phi N: "<<phi_N<<endl;
     obtener_e();
-    
-    d=inversa(e);
     cout<<"e: "<<e<<endl;
-   cout<<"d: "<<d<<endl;
-    codigo_cifrado=calcular(ubicacion,e);
-    int aux= codigo_cifrado;
-    cout <<"aux: "<<aux<<endl;
-    while(aux>alfabeto.length())
-    {
-      aux=funcion_modulo(aux, alfabeto.length());
+    d=inversa(e);
+    cout<<"d: "<<d<<endl;
+
+    ////////////////////////////////////////////////
+    string tamaño_N = to_string(N);
+    int tamaño_para_dividir = tamaño_N.length()-1;
+
+    cout<<conjunto_indices<<endl;
+    int tamaño_digitos = conjunto_indices.length();
+    int n_bloques= tamaño_digitos / tamaño_para_dividir;
+    int bloques[n_bloques]; // aqui estaran los digitos dividio en bloques de n-1
+
+    int indice=0;
+    cout<<"divide en bloques de: "<<n_bloques<<endl;
+    for(int aux =0; indice < n_bloques; aux= aux+ tamaño_para_dividir, indice++){
+      string grupo="";
+      grupo = conjunto_indices.substr(aux,tamaño_para_dividir);//para obtener cada bloques
+      bloques[indice]=(stoi(grupo));
+      cout<<bloques[indice]<<", ";
     }
-    
-    cout <<"aux: "<<aux<<endl;
-    mensaje_cifrado=alfabeto[aux];
-    return mensaje_cifrado;
+    cout<<endl;
+
+
+
+////////////////////////////////////////////////////
+  string codigo_cifrado;
+
+  for(int i=0; i<n_bloques;i++){
+    int operacion= calcular(bloques[i],e);
+    string ayuda=to_string(operacion);
+    while(ayuda.length()<tamaño_N.length()){
+      ayuda = to_string(0)+ayuda;
+    }
+    codigo_cifrado+= ayuda;
+  }
+
+    return codigo_cifrado;
 
   }
 
-  string descifrado( string letra_cifrada){
-    int indice=alfabeto.find(letra_cifrada);
+  string descifrado( string mensaje_cifrado){
     string mensaje_descifrado;
-    int codigo_cifrado=calcular(indice,d);
-     int aux= codigo_cifrado;
-    cout <<"aux: "<<aux<<endl;
-    while(aux>alfabeto.length())
-    {
-      aux=funcion_modulo(aux, alfabeto.length());
+
+    string indices_descifrados;
+    string tamaño_N = to_string(N);
+    int tamaño_de_N = tamaño_N.length();
+    for(int aux=0; aux<mensaje_cifrado.length();aux=aux+tamaño_de_N){
+      string number = mensaje_cifrado.substr(aux,tamaño_de_N);
+      int numero = stoi(number);
+      int codigo_descifrado=calcular(numero,d);
+      string ayuda= to_string(codigo_descifrado);
+
+      while(ayuda.length()<tamaño_N.length()-1){///completar con 0
+        ayuda = to_string(0)+ayuda;
+      }
+
+      indices_descifrados+= ayuda;
     }
+
+    cout<<"indices_descifrados: "<<indices_descifrados<<endl;
+    ///////////////////////////////saber el mensaje
+    int ultimo_numero = alfabeto.length();
+    string letra_importante = to_string(ultimo_numero);
+    int longitud_letra_importante = letra_importante.length();
+    cout<<"Longitud: "<<longitud_letra_importante<<endl;
+
     
-    cout <<"aux: "<<aux<<endl;
-    mensaje_descifrado=alfabeto[aux];
+    for(int i=0;i<indices_descifrados.length()-longitud_letra_importante;i=i+longitud_letra_importante){
+      string n = indices_descifrados.substr(i,longitud_letra_importante);
+      int n_indice = stoi(n);
+      cout<<n_indice<<", ";
+      mensaje_descifrado+= alfabeto[n_indice];
+
+    }
+  cout<<endl;
     return mensaje_descifrado;
   }
 
 };
 
+string alfabeto="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
 int main() {
   RSA Emisor;
-  string mensaje="u";
-  cout<<"mensaje: "<<mensaje<<endl;
+  Emisor.limites(5);
+  string mensaje;
+  cout<<"mensaje: ";
+  getline(cin,mensaje);
+  cout<<endl;
   string m_cifrado=Emisor.cifrado(mensaje);
   cout<<"mensaje cifrado: "<<m_cifrado<<endl;
   cout<<endl;
+  
   string m_descifrado=Emisor.descifrado(m_cifrado);
-  cout<<"mensaje descifrado: "<<m_descifrado<<endl;;
+  cout<<"mensaje descifrado: "<<m_descifrado<<endl;
 
+  return 0;
 }

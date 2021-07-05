@@ -45,8 +45,9 @@ class RSA {
         /////rúbrica y firma/////
         long k2=Num2Str(n).size()-1;
         string d_F=Completar_datos(datos,k2);
-        while(divi((d_F.size()*num_dig),k2)!=0 || divi(((k2+1)*((d_F.size()*num_dig)/k2)),k)!=0){
-            d_F+=' ';}
+        //while(divi((d_F.size()num_dig),k2)!=0 || divi(((k2+1)((d_F.size()*num_dig)/k2)),k)!=0){
+            //d_F+=' ';}
+            cout<<"texto divisible"<<endl;
         for (long i=0; i<d_F.size(); i++){
             long l=alfabeto.find(d_F[i]);
             r<<Completar0s(l,num_dig);
